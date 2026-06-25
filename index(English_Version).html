@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biogas Data Visualization Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Prompt:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="glow-circle circle-1"></div>
+        <div class="glow-circle circle-2"></div>
+    </div>
+
+    <header class="glass-panel">
+        <div class="header-content">
+            <h1>Biogas Analytics Dashboard</h1>
+            <p>Data Analysis and Biogas Potential Evaluation System</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- KPI Cards -->
+        <section class="kpi-grid">
+            <div class="kpi-card glass-panel">
+                <h3>Average CH4</h3>
+                <div class="kpi-value">54.6%</div>
+                <div class="kpi-subtitle">Oct 2025 - May 2026</div>
+            </div>
+            <div class="kpi-card glass-panel">
+                <h3>Average Production</h3>
+                <div class="kpi-value">15,530</div>
+                <div class="kpi-subtitle">Nm³/m³ / Day (Oct 2025 - May 2026)</div>
+            </div>
+            <div class="kpi-card glass-panel">
+                <h3>Total Biogas</h3>
+                <div class="kpi-value">3.727M</div>
+                <div class="kpi-subtitle">Nm³ (Oct 2025 - May 2026)</div>
+            </div>
+        </section>
+
+        <!-- Composition Profile Section -->
+        <section class="composition-section glass-panel">
+            <h2>Composition Profile (Column Average)</h2>
+            <div class="comp-grid">
+                <div class="comp-card ch4-card">
+                    <div class="comp-icon">🔥</div>
+                    <div class="comp-details">
+                        <h4>Methane (CH4)</h4>
+                        <div class="comp-value">54.60%</div>
+                    </div>
+                </div>
+                <div class="comp-card co2-card">
+                    <div class="comp-icon">💨</div>
+                    <div class="comp-details">
+                        <h4>Carbon Dioxide (CO2)</h4>
+                        <div class="comp-value">41.40%</div>
+                    </div>
+                </div>
+                <div class="comp-card o2-card">
+                    <div class="comp-icon">☁️</div>
+                    <div class="comp-details">
+                        <h4>Oxygen (O2)</h4>
+                        <div class="comp-value">0.50%</div>
+                    </div>
+                </div>
+                <div class="comp-card h2s-card">
+                    <div class="comp-icon">🧪</div>
+                    <div class="comp-details">
+                        <h4>Hydrogen Sulfide (H2S)</h4>
+                        <div class="comp-value">1,878.60 ppm</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-container glass-panel">
+                <h2>Methane (CH4) Concentration per Tank</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">(Source:
+                    <code>Biogas data.xlsx</code> | Period: Oct 2025 - May 2026)
+                </p>
+                <div class="canvas-wrapper">
+                    <canvas id="ch4Chart"></canvas>
+                </div>
+
+                <!-- Extra Metrics Table -->
+                <div class="metrics-table-container">
+                    <table id="extraMetricsTable" class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>Parameter</th>
+                                <th>Oct '25</th>
+                                <th>Nov '25</th>
+                                <th>Dec '25</th>
+                                <th>Jan '26</th>
+                                <th>Feb '26</th>
+                                <th>Mar '26</th>
+                                <th>Apr '26</th>
+                                <th>May '26</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by app.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="chart-container glass-panel">
+                <h2>Biogas Production (Nm³) vs Wastewater & Cake (m³)</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+                    (Source: Monthly summary image | Period: Jan - Dec)</p>
+                <div class="canvas-wrapper">
+                    <canvas id="productionChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Yield Calculator Section -->
+        <section class="calculator-section glass-panel">
+            <h2>Theoretical Biogas Yield Evaluation (Covered Lagoon)</h2>
+            <p class="calc-desc">Calculation based on substrate state (Wastewater & Palm Cake)</p>
+
+            <div class="calc-grid">
+                <!-- Wastewater Calculator -->
+                <div class="calc-card">
+                    <h3>1. From Wastewater (POME)</h3>
+                    <div class="input-group">
+                        <label>COD in (kg/m³)</label>
+                        <input type="number" id="codIn" value="131.165" step="0.01">
+                        <span class="flag-warning" id="flag-cod"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>COD Removal Efficiency (η)</label>
+                        <input type="number" id="effCod" value="0.80" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>Methane Yield Rate (Y_CH4)</label>
+                        <input type="number" id="yieldCh4" value="0.35" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>CH4 Proportion (C_CH4)</label>
+                        <input type="number" id="cCh4" value="0.60" step="0.01">
+                    </div>
+                    <button onclick="calculateWaterYield()" class="calc-btn">Calculate Wastewater Yield</button>
+                    <div class="calc-result" id="resultWater">
+                        Yield: <span id="valWater">-</span> m³ Biogas / m³ Wastewater
+                    </div>
+                </div>
+
+                <!-- Palm Cake Calculator -->
+                <div class="calc-card">
+                    <h3>2. From Palm Cake</h3>
+                    <div class="input-group">
+                        <label>TS Fraction</label>
+                        <input type="number" id="tsVal" value="" placeholder="e.g. 0.25">
+                        <span class="flag-warning" id="flag-ts">⚠️ No Data (Required)</span>
+                    </div>
+                    <div class="input-group">
+                        <label>VS to TS Fraction</label>
+                        <input type="number" id="vsVal" value="" placeholder="e.g. 0.80">
+                        <span class="flag-warning" id="flag-vs">⚠️ No Data (Required)</span>
+                    </div>
+                    <div class="input-group">
+                        <label>VS Destruction Efficiency (η)</label>
+                        <input type="number" id="effVs" value="0.50" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>Specific Biogas Yield (Y_Biogas)</label>
+                        <input type="number" id="yieldBiogas" value="0.60" step="0.01">
+                    </div>
+                    <button onclick="calculateCakeYield()" class="calc-btn">Calculate Palm Cake Yield</button>
+                    <div class="calc-result" id="resultCake">
+                        Yield: <span id="valCake">-</span> m³ Biogas / ton Wet Cake
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <h4>⚠️ Raw Data Limitations (Flags)</h4>
+                <ul id="dataFlags">
+                    <li>Missing TS and VS parameters for Palm Cake</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Purification Guidelines -->
+        <section class="guidelines-section glass-panel">
+            <h2>Guidelines for CH4 Purification to Bio-Methane Specs</h2>
+            <div class="guideline-content">
+                <div class="g-card">
+                    <h3>1. Target (Bio-Methane Specification)</h3>
+                    <p>Must upgrade quality to closely resemble Natural Gas (NG)</p>
+                    <ul>
+                        <li><strong>CH4:</strong> > 95% (Some standards > 97%)</li>
+                        <li><strong>CO2:</strong>
+                            < 2-4%</li>
+                        <li><strong>H2S:</strong>
+                            < 5 mg/m³ (or ppm)</li>
+                        <li><strong>Moisture:</strong>
+                            < 32 mg/m³</li>
+                    </ul>
+                </div>
+                <div class="g-card">
+                    <h3>2. Pre-treatment</h3>
+                    <p>Reduce H2S and moisture before the main upgrading process</p>
+                    <ul>
+                        <li><strong>Biological Desulfurization:</strong> Bio-scrubbers utilizing sulfur-oxidizing bacteria</li>
+                        <li><strong>Activated Carbon:</strong> Adsorbs residual H2S</li>
+                        <li><strong>Chilling / Dehumidification:</strong> Lowers temperature to condense and remove water</li>
+                    </ul>
+                </div>
+                <div class="g-card">
+                    <h3>3. Upgrading Technologies</h3>
+                    <p>Separate CO2 to increase CH4 concentration</p>
+                    <ul>
+                        <li><strong>Water Scrubbing:</strong> Uses high-pressure water to dissolve CO2 (popular due to simplicity)</li>
+                        <li><strong>Pressure Swing Adsorption (PSA):</strong> Uses adsorbent materials to capture CO2 under pressure</li>
+                        <li><strong>Membrane Separation:</strong> Uses semi-permeable membranes to separate gas molecules (compact footprint)</li>
+                        <li><strong>Amine Wash:</strong> Uses chemical solvents to absorb CO2 (highest purity efficiency)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

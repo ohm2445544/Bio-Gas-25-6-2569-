@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biogas Data Visualization Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Prompt:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="background-effects">
+        <div class="glow-circle circle-1"></div>
+        <div class="glow-circle circle-2"></div>
+    </div>
+
+    <header class="glass-panel">
+        <div class="header-content">
+            <h1>Biogas Analytics Dashboard</h1>
+            <p>ระบบวิเคราะห์ข้อมูลและประเมินศักยภาพก๊าซชีวภาพ</p>
+        </div>
+    </header>
+
+    <main>
+        <!-- KPI Cards -->
+        <section class="kpi-grid">
+            <div class="kpi-card glass-panel">
+                <h3>ค่าเฉลี่ย CH4</h3>
+                <div class="kpi-value">54.6%</div>
+                <div class="kpi-subtitle">ต.ค. 2568 - พ.ค. 2569</div>
+            </div>
+            <div class="kpi-card glass-panel">
+                <h3>กำลังการผลิตเฉลี่ย</h3>
+                <div class="kpi-value">15,530</div>
+                <div class="kpi-subtitle">Nm³/m³ / วัน (ต.ค. 2568 - พ.ค. 2569)</div>
+            </div>
+            <div class="kpi-card glass-panel">
+                <h3>ปริมาณก๊าซรวม</h3>
+                <div class="kpi-value">3.727M</div>
+                <div class="kpi-subtitle">Nm³ (ต.ค. 2568 - พ.ค. 2569)</div>
+            </div>
+        </section>
+
+        <!-- Composition Profile Section -->
+        <section class="composition-section glass-panel">
+            <h2>Composition Profile (Column Average)</h2>
+            <div class="comp-grid">
+                <div class="comp-card ch4-card">
+                    <div class="comp-icon">🔥</div>
+                    <div class="comp-details">
+                        <h4>Methane (CH4)</h4>
+                        <div class="comp-value">54.60%</div>
+                    </div>
+                </div>
+                <div class="comp-card co2-card">
+                    <div class="comp-icon">💨</div>
+                    <div class="comp-details">
+                        <h4>Carbon Dioxide (CO2)</h4>
+                        <div class="comp-value">41.40%</div>
+                    </div>
+                </div>
+                <div class="comp-card o2-card">
+                    <div class="comp-icon">☁️</div>
+                    <div class="comp-details">
+                        <h4>Oxygen (O2)</h4>
+                        <div class="comp-value">0.50%</div>
+                    </div>
+                </div>
+                <div class="comp-card h2s-card">
+                    <div class="comp-icon">🧪</div>
+                    <div class="comp-details">
+                        <h4>Hydrogen Sulfide (H2S)</h4>
+                        <div class="comp-value">1,878.60 ppm</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="charts-section">
+            <div class="chart-container glass-panel">
+                <h2>ความเข้มข้นก๊าซมีเทน (CH4 %) รายบ่อ</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">(ข้อมูลอ้างอิงจากไฟล์:
+                    <code>Biogas data.xlsx</code> | ช่วงเวลา: ต.ค. 2568 - พ.ค. 2569)
+                </p>
+                <div class="canvas-wrapper">
+                    <canvas id="ch4Chart"></canvas>
+                </div>
+
+                <!-- Extra Metrics Table -->
+                <div class="metrics-table-container">
+                    <table id="extraMetricsTable" class="premium-table">
+                        <thead>
+                            <tr>
+                                <th>พารามิเตอร์</th>
+                                <th>ต.ค. 68</th>
+                                <th>พ.ย. 68</th>
+                                <th>ธ.ค. 68</th>
+                                <th>ม.ค. 69</th>
+                                <th>ก.พ. 69</th>
+                                <th>มี.ค. 69</th>
+                                <th>เม.ย. 69</th>
+                                <th>พ.ค. 69</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by app.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="chart-container glass-panel">
+                <h2>ปริมาณก๊าซชีวภาพ (Nm³) vs ปริมาณน้ำเสียและเค้ก (m³)</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+                    (ข้อมูลอ้างอิงจากไฟล์รูปภาพสรุปยอดรายเดือน | ช่วงเวลา: ม.ค. - ธ.ค.)</p>
+                <div class="canvas-wrapper">
+                    <canvas id="productionChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Yield Calculator Section -->
+        <section class="calculator-section glass-panel">
+            <h2>ประเมินศักยภาพการผลิตก๊าซชีวภาพในระบบบ่อผ้าใบ (Theoretical Yield)</h2>
+            <p class="calc-desc">การคำนวณตามสถานะของสารตั้งต้น (Wastewater & Palm Cake)</p>
+
+            <div class="calc-grid">
+                <!-- Wastewater Calculator -->
+                <div class="calc-card">
+                    <h3>1. จากน้ำเสีย (Wastewater / POME)</h3>
+                    <div class="input-group">
+                        <label>COD in (kg/m³)</label>
+                        <input type="number" id="codIn" value="131.165" step="0.01">
+                        <span class="flag-warning" id="flag-cod"></span>
+                    </div>
+                    <div class="input-group">
+                        <label>ประสิทธิภาพกำจัด COD (η)</label>
+                        <input type="number" id="effCod" value="0.80" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>อัตราการเกิดมีเทน (Y_CH4)</label>
+                        <input type="number" id="yieldCh4" value="0.35" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>สัดส่วน CH4 (C_CH4)</label>
+                        <input type="number" id="cCh4" value="0.60" step="0.01">
+                    </div>
+                    <button onclick="calculateWaterYield()" class="calc-btn">คำนวณ Yield น้ำเสีย</button>
+                    <div class="calc-result" id="resultWater">
+                        Yield: <span id="valWater">-</span> m³ Biogas / m³ Wastewater
+                    </div>
+                </div>
+
+                <!-- Palm Cake Calculator -->
+                <div class="calc-card">
+                    <h3>2. จากกากปาล์ม (Palm Cake)</h3>
+                    <div class="input-group">
+                        <label>สัดส่วน TS (Fraction)</label>
+                        <input type="number" id="tsVal" value="" placeholder="เช่น 0.25">
+                        <span class="flag-warning" id="flag-ts">⚠️ ไม่มีข้อมูล (Required)</span>
+                    </div>
+                    <div class="input-group">
+                        <label>สัดส่วน VS ต่อ TS (Fraction)</label>
+                        <input type="number" id="vsVal" value="" placeholder="เช่น 0.80">
+                        <span class="flag-warning" id="flag-vs">⚠️ ไม่มีข้อมูล (Required)</span>
+                    </div>
+                    <div class="input-group">
+                        <label>ประสิทธิภาพสลาย VS (η)</label>
+                        <input type="number" id="effVs" value="0.50" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>Specific Biogas Yield (Y_Biogas)</label>
+                        <input type="number" id="yieldBiogas" value="0.60" step="0.01">
+                    </div>
+                    <button onclick="calculateCakeYield()" class="calc-btn">คำนวณ Yield กากปาล์ม</button>
+                    <div class="calc-result" id="resultCake">
+                        Yield: <span id="valCake">-</span> m³ Biogas / ton Wet Cake
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert-box">
+                <h4>⚠️ ข้อจำกัดจากข้อมูลที่มีอยู่ (Raw Data Flags)</h4>
+                <ul id="dataFlags">
+                    <li>ยังขาดพารามิเตอร์ <code>TS</code> และ <code>VS</code> สำหรับกากปาล์ม</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Purification Guidelines -->
+        <section class="guidelines-section glass-panel">
+            <h2>แนวทางการ Purify CH4 ให้ได้ Spec ของ Bio-Methane</h2>
+            <div class="guideline-content">
+                <div class="g-card">
+                    <h3>1. เป้าหมาย (Bio-Methane Specification)</h3>
+                    <p>ต้องปรับปรุงคุณภาพให้ใกล้เคียงก๊าซธรรมชาติ (NG)</p>
+                    <ul>
+                        <li><strong>CH4:</strong> > 95% (บางมาตรฐาน > 97%)</li>
+                        <li><strong>CO2:</strong>
+                            < 2-4%</li>
+                        <li><strong>H2S:</strong>
+                            < 5 mg/m³ (หรือ ppm)</li>
+                        <li><strong>ความชื้น (Moisture):</strong>
+                            < 32 mg/m³</li>
+                    </ul>
+                </div>
+                <div class="g-card">
+                    <h3>2. การบำบัดขั้นต้น (Pre-treatment)</h3>
+                    <p>ลด H2S และความชื้นก่อนเข้ากระบวนการหลัก</p>
+                    <ul>
+                        <li><strong>Biological Desulfurization:</strong> หอไบโอสครับเบอร์ใช้แบคทีเรียกินซัลเฟอร์</li>
+                        <li><strong>Activated Carbon:</strong> ดูดซับ H2S ที่เหลือ</li>
+                        <li><strong>Chilling / Dehumidification:</strong> ลดอุณหภูมิเพื่อควบแน่นน้ำออก</li>
+                    </ul>
+                </div>
+                <div class="g-card">
+                    <h3>3. เทคโนโลยีอัพเกรด (Upgrading Technologies)</h3>
+                    <p>แยก CO2 เพื่อเพิ่มความเข้มข้น CH4</p>
+                    <ul>
+                        <li><strong>Water Scrubbing:</strong> ใช้น้ำละลาย CO2 (นิยมใช้เพราะง่าย)</li>
+                        <li><strong>Pressure Swing Adsorption (PSA):</strong> ใช้สารดูดซับจับ CO2 ภายใต้แรงดัน</li>
+                        <li><strong>Membrane Separation:</strong> ใช้เยื่อเลือกผ่านแยกโมเลกุลก๊าซ (ขนาดกะทัดรัด)</li>
+                        <li><strong>Amine Wash:</strong> ใช้สารเคมีดูดซับ CO2 (ประสิทธิภาพสูงสุด)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
